@@ -104,18 +104,16 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: .4 });
 document.querySelectorAll('[data-countup]').forEach(el => io.observe(el));
 
-/* offset-bar fill animation (widths from data-w) */
-const offsetIO = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.offset-fill[data-w]').forEach(f => f.style.width = f.dataset.w + '%');
-      offsetIO.unobserve(e.target);
-    }
-  });
-}, { threshold: .3 });
+/* offset-bar fill (widths from data-w). Animate when scrolled into view, but always
+   fill via a guaranteed fallback so the bars are never left empty. */
+const fillOffsets = el => el.querySelectorAll('.offset-fill[data-w]').forEach(f => { f.style.width = f.dataset.w + '%'; });
 document.querySelectorAll('.offset-bar').forEach(el => {
-  if (reduceMotion) el.querySelectorAll('.offset-fill[data-w]').forEach(f => f.style.width = f.dataset.w + '%');
-  else offsetIO.observe(el);
+  if (reduceMotion) { fillOffsets(el); return; }
+  const o = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => { if (e.isIntersecting) { fillOffsets(el); obs.disconnect(); } });
+  }, { threshold: 0.01 });
+  o.observe(el);
+  setTimeout(() => fillOffsets(el), 1600);  // fallback: never stuck empty
 });
 
 /* ============================================================
