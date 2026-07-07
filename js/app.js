@@ -77,12 +77,16 @@ function fmt(v, unit) {
 }
 getCSV('headline_kpis.csv').then(rows => {
   const grid = document.getElementById('kpiGrid');
-  grid.innerHTML = rows.map(k => `
-    <div class="kpi">
+  grid.innerHTML = rows.map(k => {
+    const src = k.source_url
+      ? `<a class="kpi-src kpi-src-link" href="${k.source_url}" target="_blank" rel="noopener" title="Source: ${k.source}">${k.source} · ${k.asof} <span class="kpi-src-arrow">↗</span></a>`
+      : `<div class="kpi-src">${k.source} · ${k.asof}</div>`;
+    return `<div class="kpi">
       <div class="kpi-val">${k.label}</div>
       <div class="kpi-label">${k.sublabel}</div>
-      <div class="kpi-src">${k.source} · ${k.asof}</div>
-    </div>`).join('');
+      ${src}
+    </div>`;
+  }).join('');
 });
 
 /* generic count-up for [data-countup] */
