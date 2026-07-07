@@ -48,9 +48,11 @@ body {
 }
 img { max-width: 100%; display: block; }
 canvas { max-width: 100%; }
-/* Allow grid/flex children to shrink below content width (prevents mobile overflow) */
+/* Allow grid/flex children to shrink below content width (prevents mobile overflow).
+   Note: .offset-track is deliberately excluded — min-width:0 on a flex item breaks
+   percentage-width resolution of its absolutely-positioned fill child. */
 .grid-2 > *, .map-wrap > *, .chart-box, .stat-card, .structure-card,
-.chart-card, .card, .offset-track, .kpi { min-width: 0; }
+.chart-card, .card, .kpi { min-width: 0; }
 a { color: var(--spruce); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
