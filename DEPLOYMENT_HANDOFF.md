@@ -5,6 +5,7 @@
 **Owner:** Aaron Weiskittel, CRSF Director (aaron.weiskittel@maine.edu)
 **Deploy lead:** Leo Edmiston-Cyr (WordPress)
 **Live target:** maineforestdashboard.com
+**Live preview (staging):** https://holoros.github.io/maine-forest-dashboard/ (GitHub Pages, holoros account)
 **Folder:** `outputs/maine-forest-dashboard/V6/`
 
 This is the single document to take V6 live. V5 remains untouched in the sibling `V5/` folder as a rollback.
@@ -115,8 +116,13 @@ The dashboard is CSV-driven, so the annual refresh is mostly file replacement in
 - Forest-loss overlay: rebuild the COG on OSC Cardinal when the next Hansen release lands (recipe in
   the V5 handoff), then drop in `data/maine_forestloss.tif`.
 
-After any update, run `python3 _qa/make_embed.py` to refresh the `file://` fallback snapshot, bump
-`CACHE_VERSION` in `sw.js` so returning visitors get the new build, then re-run `_qa/stress_test.py`.
+After any update: run `python3 _qa/make_embed.py` to refresh the `file://` fallback snapshot, bump
+the `?v=` query on the `css/style.css` and `js/*.js` links in `index.html` (this cache-busts the
+CSS/JS for returning visitors), bump `CACHE_VERSION` in `sw.js`, then re-run `_qa/stress_test.py`.
+
+Note on caching: the CSS and JS links carry a `?v=` version token, so bumping it forces browsers to
+fetch the new files immediately. Without that bump, a returning visitor's browser or service worker
+can serve the previous CSS/JS for a while. This was verified live on the GitHub Pages staging URL.
 
 ## Launch checklist
 
