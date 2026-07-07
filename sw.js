@@ -1,6 +1,6 @@
 /* Maine Forest Dashboard service worker.
    Caches the app shell + datasets for offline load. Bump CACHE_VERSION on each build. */
-const CACHE_VERSION = 'mfd-v6.7';
+const CACHE_VERSION = 'mfd-v6.8';
 const SHELL = [
   './', 'index.html', 'css/style.css', 'js/app.js', 'js/data-embed.js', 'manifest.json',
   'images/logo_mfd_icon.png', 'images/logo_mfd_mark.png', 'images/logo_crsf.png', 'images/logo_munsungan.png',
