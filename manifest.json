@@ -1,0 +1,22 @@
+{
+  "name": "Maine Forest Dashboard",
+  "short_name": "ME Forest",
+  "description": "State of Maine's Forests: carbon, climate, health, economy, and conservation. Measured, not modeled.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F7F5EF",
+  "theme_color": "#1F4D33",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "en-US",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    { "src": "images/logo_mfd_icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "images/logo_mfd_icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Climate & Carbon", "url": "./#climate", "description": "Maine's carbon balance and path to neutrality" },
+    { "name": "Maine by County", "url": "./#counties", "description": "County forest indicators and forest-loss map" },
+    { "name": "Sources", "url": "./#sources", "description": "How we know this" }
+  ]
+}

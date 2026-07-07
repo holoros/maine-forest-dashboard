@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State of Maine's Forests — Maine Forest Dashboard</title>
+<meta name="description" content="A clean, data-driven look at Maine's forests: carbon, health, economy, and conservation. Every figure is measured or officially reported, aligned with the Maine Climate Council forest indicators.">
+<meta property="og:title" content="State of Maine's Forests">
+<meta property="og:description" content="Maine's forests, measured not modeled. Carbon, health, economy, and conservation on one clean dashboard.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/og/og_carbon.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1F4D33">
+<link rel="icon" type="image/png" href="images/logo_mfd_icon.png">
+<link rel="apple-touch-icon" href="images/logo_mfd_icon.png">
+<link rel="manifest" href="manifest.json">
+<!-- Privacy-respecting analytics (staged, disabled). Uncomment to enable at launch:
+<script defer data-domain="maineforestdashboard.com" src="https://plausible.io/js/script.js"></script> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#overview">Skip to content</a>
+
+<!-- NAV -->
+<header class="nav" id="top">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <img class="brand-mark-img" src="images/logo_mfd_mark.png" alt="Maine Forest Dashboard logo" width="26" height="38">
+      <span class="brand-text">Maine Forest<br><span class="brand-text-sub">Dashboard</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#overview">Overview</a>
+      <a href="#climate">Climate</a>
+      <a href="#carbon">Carbon</a>
+      <a href="#health">Health</a>
+      <a href="#economy">Economy</a>
+      <a href="#land">Land</a>
+      <a href="#counties">Counties</a>
+      <a href="#sources">Sources</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<!-- HERO / OVERVIEW -->
+<section class="hero" id="overview">
+  <div class="wrap">
+    <p class="eyebrow">State of Maine's Forests · 2026</p>
+    <h1 class="hero-title">The most forested state in America, <em>measured</em>.</h1>
+    <p class="hero-lede">
+      Maine's 17.4 million acres of forestland are the state's single most important climate asset —
+      removing more carbon dioxide than Maine emits from all sources combined, while anchoring an
+      $8.3 billion economy. This dashboard tracks the numbers behind that story. Every figure here is
+      measured in the field or officially reported. Nothing is modeled.
+    </p>
+    <div class="kpi-grid" id="kpiGrid" aria-label="Headline indicators"></div>
+    <p class="hero-note">
+      Aligned with the <strong>Maine Climate Council</strong> Scientific &amp; Technical Subcommittee
+      forest indicators (Forest Carbon &amp; Productivity; Forest Health &amp; Diversity, 2026).
+    </p>
+  </div>
+</section>
+
+<!-- CLIMATE & CARBON -->
+<section class="section alt" id="climate">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">01 — Climate asset</span>
+      <h2>Climate &amp; Carbon</h2>
+      <p class="section-sub">
+        Maine's forests are the centerpiece of <em>Maine Won't Wait</em>, the state climate plan.
+        Natural and working lands already offset the large majority of Maine's emissions, putting the
+        state among the closest in the nation to its 2045 carbon-neutrality target.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card accent-card">
+        <figcaption>
+          <h3>Forests remove more than the state emits</h3>
+          <p>Annual carbon flows, million metric tons CO₂-equivalent. Forestland removals exceed total state emissions, leaving a net sink.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartBalance"></canvas></div>
+      </figure>
+
+      <div class="card stat-card">
+        <h3>Closing in on carbon neutrality</h3>
+        <div class="bigstat">
+          <span class="bigstat-num" data-countup="91" data-suffix="%">91%</span>
+          <span class="bigstat-label">of gross state emissions offset by natural &amp; working lands (2017–2021)</span>
+        </div>
+        <div class="offset-bar" aria-hidden="true">
+          <div class="offset-row"><span class="offset-tag">2007–2011</span><div class="offset-track"><div class="offset-fill" data-w="51"></div></div><span class="offset-val">51%</span></div>
+          <div class="offset-row"><span class="offset-tag">2017–2021</span><div class="offset-track"><div class="offset-fill hi" data-w="91"></div></div><span class="offset-val">91%</span></div>
+        </div>
+        <p class="stat-foot">The offset nearly doubled in a decade. Every forested acre lost permanently reduces this capacity.</p>
+      </div>
+    </div>
+
+    <figure class="card chart-card wide">
+      <figcaption>
+        <h3>The climate signal: a drying trend</h3>
+        <p>Standardized Precipitation-Evapotranspiration Index (SPEI, 12-month). Negative values indicate drier, more drought-prone conditions — a rising climate stress on forest health.</p>
+      </figcaption>
+      <div class="chart-box"><canvas id="chartDrought"></canvas></div>
+    </figure>
+
+    <div class="stressor card" id="stressorCard">
+      <span class="stressor-tag" id="stressorTag">Climate stressor</span>
+      <h3 id="stressorHead">Loading…</h3>
+      <p id="stressorBody"></p>
+      <a id="stressorLink" href="#" target="_blank" rel="noopener" class="stressor-link"></a>
+    </div>
+
+    <div class="takeaway">
+      <span class="takeaway-mark" aria-hidden="true">🌲</span>
+      <p><strong>What the data tell us.</strong> Maine's forests are its number-one climate asset —
+      absorbing more CO₂ than the entire state emits. Sustaining that role through warming, drought, and
+      spreading pests is the central challenge the data on this dashboard are built to measure.</p>
+    </div>
+
+    <div class="handoff card">
+      <div class="handoff-body">
+        <span class="handoff-tag">Looking ahead</span>
+        <h3>Where the data go next: projections</h3>
+        <p>This dashboard shows what has been <em>measured</em>. To explore how Maine's forest carbon
+        could evolve to 2100 under different management and climate scenarios — a multi-model ensemble
+        anchored to the same FIA data — continue to the PERSEUS Forest Intelligence platform.</p>
+      </div>
+      <a class="handoff-btn" href="https://holoros.github.io/perseus-forest-intelligence/#state=ME&tab=build" target="_blank" rel="noopener">Open Maine in PERSEUS →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CARBON -->
+<section class="section" id="carbon">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">02 — Forest carbon</span>
+      <h2>Forest Carbon &amp; Productivity</h2>
+      <p class="section-sub">
+        Maine forests store roughly 1.59 billion metric tons of carbon and keep growing far more wood
+        than is harvested. They are one of the few places in the country whose lands absorb more carbon
+        than the entire state emits.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>Carbon storage is climbing</h3>
+          <p>Total carbon stored in Maine forests, with 95% confidence band. Up <strong>4.6% since 2003</strong>.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartCarbon"></canvas></div>
+      </figure>
+
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>Growth outpaces harvest</h3>
+          <p>Growth-to-harvest ratio. A value above 1.0 means forests grow faster than they are cut. Maine reached <strong>1.72× in 2024</strong>.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartGH"></canvas></div>
+      </figure>
+    </div>
+
+    <div class="takeaway">
+      <span class="takeaway-mark" aria-hidden="true">🌲</span>
+      <p><strong>What the data tell us.</strong> Carbon storage is up 4.6% since 2003, harvest remains
+      highly sustainable (grow 72% more than is cut), and tree mortality is declining. Forests are
+      Maine's number-one climate asset — every forested acre lost permanently reduces the state's
+      capacity to remove carbon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HEALTH -->
+<section class="section alt" id="health">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">03 — Resilience</span>
+      <h2>Forest Health &amp; Diversity</h2>
+      <p class="section-sub">
+        Maine's forests are getting denser and, in places, more stressed. Diversity is holding steady,
+        wildfire risk stays very low, but a set of invasive pests is spreading fast.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>Denser stands, falling mortality</h3>
+          <p>Relative density has risen ~10% to <strong>0.57</strong>, now above the optimal 0.30–0.55 zone. Mortality fell 14% since 2008.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartHealth"></canvas></div>
+      </figure>
+
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>A century of wildfire improvement</h3>
+          <p>Acres burned per year. Down <strong>~97%</strong> from the pre-1950 era. Maine averages roughly 530 acres burned annually — among the lowest nationally.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartFire"></canvas></div>
+      </figure>
+    </div>
+
+    <div class="pest-panel card">
+      <div class="pest-head">
+        <h3>Invasive pests are spreading</h3>
+        <p>Number of Maine counties (of 16) affected by each major invasive pest.</p>
+      </div>
+      <div class="pest-grid" id="pestGrid"></div>
+      <p class="stat-foot">Climate warming is expected to increase pest range and overwintering survival. Species and structural diversity remain stable, providing a solid ecological foundation for resilience.</p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>How forests are being disturbed</h3>
+          <p>Share of Maine forest conditions recording each disturbance agent (FIA field plots). About <strong>20% show some disturbance</strong> in the latest inventory.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartDisturb"></canvas></div>
+      </figure>
+
+      <div class="card structure-card">
+        <h3>Forest maturity &amp; habitat</h3>
+        <p class="struct-sub">Measured structure that shapes carbon, biodiversity, and resilience.</p>
+        <div class="struct-grid" id="structGrid"></div>
+        <p class="stat-foot">FIA field measurements of stand age, size class, and standing dead wood, 2024. Compiled via the CRSF PERSEUS data pipeline.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <span class="takeaway-mark" aria-hidden="true">🌲</span>
+      <p><strong>What the data tell us.</strong> Stand density is approaching concerning levels — strategic
+      thinning would improve resilience and produce wood products. Beech leaf disease is now statewide;
+      emerald ash borer and hemlock woolly adelgid keep expanding. Wildfire risk is very low, but drought
+      risk is rising under climate change.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMY -->
+<section class="section" id="economy">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">04 — Working forest</span>
+      <h2>Economy &amp; Products</h2>
+      <p class="section-sub">
+        Maine's forest products sector contributes $8.3 billion a year and supports nearly 30,000 jobs —
+        one of every 29 dollars of state GDP. It leads the nation in forest-sector share of exports.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>How the $8.3 billion breaks down</h3>
+          <p>Direct, indirect, and induced economic output ($ millions).</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartContribution"></canvas></div>
+      </figure>
+
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>Output by sector</h3>
+          <p>Direct economic output by forest sub-sector ($ millions).</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartSector"></canvas></div>
+      </figure>
+    </div>
+
+    <figure class="card chart-card wide">
+      <figcaption>
+        <h3>Forest product exports, 2002–present</h3>
+        <p>Annual export value ($ millions), split by wood, pulp, and paper.</p>
+      </figcaption>
+      <div class="chart-box tall"><canvas id="chartExports"></canvas></div>
+    </figure>
+
+    <div class="takeaway">
+      <span class="takeaway-mark" aria-hidden="true">🌲</span>
+      <p><strong>What the data tell us.</strong> The sustainable harvest that keeps growth ahead of cutting
+      is the same harvest that sustains mills, jobs, and rural communities. Maine's challenge is measuring
+      the trade-offs — carbon, timber, habitat — not choosing one over the others.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LAND -->
+<section class="section alt" id="land">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">05 — The land</span>
+      <h2>Land &amp; Conservation</h2>
+      <p class="section-sub">
+        Nearly 88% of Maine is forested. About 4.1 million acres — roughly 22% of the forest — are
+        conserved through ownership or easement, and 85% of easement forestland stays in active
+        working-forest management.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>Who owns Maine's forests</h3>
+          <p>Share of forestland by ownership type.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartOwnership"></canvas></div>
+      </figure>
+
+      <figure class="card chart-card">
+        <figcaption>
+          <h3>A century of conservation</h3>
+          <p>Cumulative conserved acres in Maine by year of acquisition.</p>
+        </figcaption>
+        <div class="chart-box"><canvas id="chartConserved"></canvas></div>
+      </figure>
+    </div>
+
+    <div class="takeaway">
+      <span class="takeaway-mark" aria-hidden="true">🌲</span>
+      <p><strong>What the data tell us.</strong> Forest cover is stable at 87.8% — the highest of any state —
+      but has slipped 1.4 points since 2003, driven by development in southern Maine. Conservation has
+      accelerated sharply since the 1990s, keeping most of the north woods intact and working.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTIES -->
+<section class="section" id="counties">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">06 — Explore</span>
+      <h2>Maine by County</h2>
+      <p class="section-sub">
+        Choose an indicator, then click a county to see its profile. Or use "Find my area" to jump to
+        where you are.
+      </p>
+    </div>
+
+    <div class="map-controls">
+      <div class="map-layer-group" role="group" aria-label="Color counties by">
+        <span class="ctrl-label">Color by</span>
+        <button class="layer-btn active" data-layer="forest_jobs">Forest jobs</button>
+        <button class="layer-btn" data-layer="pct_forested">% forested</button>
+        <button class="layer-btn" data-layer="harvest_2013_units">Harvest volume</button>
+      </div>
+      <div class="map-overlay-group">
+        <button class="overlay-btn" id="lossBtn" aria-pressed="false">🛰 Forest loss 2001–2023</button>
+        <button class="locate-btn" id="locateBtn">📍 Find my area</button>
+      </div>
+    </div>
+    <div class="loss-legend" id="lossLegend" hidden>
+      <span class="loss-legend-label">Tree-cover loss year (Hansen Global Forest Change):</span>
+      <span class="loss-gradient" aria-hidden="true"></span>
+      <span class="loss-ends"><span>2001</span><span>2023</span></span>
+    </div>
+
+    <div class="map-wrap">
+      <div id="countyMap" class="county-map"></div>
+      <aside class="county-panel card" id="countyPanel">
+        <h3 id="cpName">Click a county</h3>
+        <p class="cp-hint" id="cpHint">Select any county on the map to see forest jobs, forest cover, and harvest levels.</p>
+        <dl class="cp-stats" id="cpStats" hidden>
+          <div><dt>Forest sector jobs</dt><dd id="cpJobs">—</dd></div>
+          <div><dt>Share of county jobs</dt><dd id="cpJobsPct">—</dd></div>
+          <div><dt>Percent forested</dt><dd id="cpForested">—</dd></div>
+          <div><dt>2013 harvest volume</dt><dd id="cpHarvest">—</dd></div>
+        </dl>
+      </aside>
+    </div>
+    <p class="map-legend-note" id="mapLegendNote"></p>
+  </div>
+</section>
+
+<!-- SOURCES / PROVENANCE -->
+<section class="section alt" id="sources">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-kicker">07 — How we know this</span>
+      <h2>Measured, not modeled</h2>
+      <p class="section-sub">
+        Every number on this dashboard comes from field measurement or official reporting. For future
+        projections and scenario modeling, see the multi-model
+        <a href="https://holoros.github.io/perseus-forest-intelligence/#state=ME" target="_blank" rel="noopener">PERSEUS Forest Intelligence platform</a>.
+      </p>
+    </div>
+
+    <div class="source-grid">
+      <div class="source-card"><h4>Forest inventory</h4><p>USDA Forest Inventory &amp; Analysis (FIA) — 3,500+ permanent field plots. Vintage: 1999–2003 baseline through 2024.</p></div>
+      <div class="source-card"><h4>Forest Service &amp; state</h4><p>Maine Forest Service annual pest surveys, wood-processor reports, and the biennial State of the Forest.</p></div>
+      <div class="source-card"><h4>Carbon accounting</h4><p>Maine State Carbon Budget v2 and Hayes et al. (2024) for emissions offset. Vintage: 2017–2021.</p></div>
+      <div class="source-card"><h4>Satellite &amp; land cover</h4><p>NLCD land cover and Hansen Global Forest Change for forest-loss mapping.</p></div>
+      <div class="source-card"><h4>Economics</h4><p>UMaine FIDACS and the Maine Forest Products Council. Vintage: 2023.</p></div>
+      <div class="source-card"><h4>Conservation &amp; boundaries</h4><p>Maine DACF conserved-lands GIS and US Census TIGER county boundaries.</p></div>
+    </div>
+
+    <div class="not-callout card">
+      <h3>What this dashboard is <em>not</em></h3>
+      <p>
+        This is an observational record of Maine's forests, released annually as the citable data product
+        for the State of Maine's Forests. It carries no model projections, no scenarios, and no forecasts.
+        For climate-scenario carbon projections and management modeling, that work lives in the CRSF
+        carbon-budget and PERSEUS platforms.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <div class="footer-lockup">
+        <img class="footer-mfd" src="images/logo_mfd_mark.png" alt="Maine Forest Dashboard logo">
+        <div>
+          <p class="footer-title">Maine Forest Dashboard</p>
+          <p class="footer-tagline">State of Maine's Forests · measured, not modeled</p>
+        </div>
+      </div>
+      <p class="footer-desc">Produced by the Center for Research on Sustainable Forests at the University of Maine, in support of the Maine Climate Council forest indicators and released annually as the citable data product for the Munsungan Symposium.</p>
+      <p class="footer-cite">Cite as: Center for Research on Sustainable Forests (2026). <em>State of Maine's Forests: Maine Forest Dashboard.</em> University of Maine. maineforestdashboard.com</p>
+    </div>
+    <div class="footer-orgs">
+      <span class="footer-orgs-label">Produced &amp; supported by</span>
+      <div class="brand-chips">
+        <a class="chip" href="https://crsf.umaine.edu" target="_blank" rel="noopener"><img src="images/logo_crsf.png" alt="Center for Research on Sustainable Forests"></a>
+        <span class="chip"><img src="images/logo_munsungan.png" alt="Munsungan Endowment"></span>
+        <a class="chip" href="https://umaine.edu" target="_blank" rel="noopener"><img src="images/logo_umaine.png" alt="University of Maine"></a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-partners-row">
+    <span class="footer-partners-label">In partnership with</span>
+    <div class="footer-partners" id="footerPartners" aria-label="Partner organizations"></div>
+  </div>
+  <div class="footer-bar">
+    <span>© 2026 University of Maine · CRSF</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/data-embed.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

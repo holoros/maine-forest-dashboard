@@ -1,0 +1,41 @@
+{
+  "active": "sbw_2026",
+  "stories": {
+    "sbw_2026": {
+      "tag": "Active outbreak · updated April 2026",
+      "headline": "The spruce budworm outbreak has arrived in Maine.",
+      "intro_paragraphs": [
+        "For the first time in 40 years, spruce budworm defoliation is visible in northern Maine. The 2018 to 2030 outbreak window predicted by entomologists in the early 2010s is now active. Aerial surveys in 2025 mapped initial defoliation in Aroostook and Somerset counties.",
+        "Maine's spruce-fir forests carry roughly 270 million cords of wood at risk. Salvage capacity, harvest scheduling, and herbicide programs are coordinated through the Maine Spruce Budworm Task Force."
+      ],
+      "timeline": [
+        { "year": "2006", "desc": "Outbreak begins in Quebec, north of Maine border" },
+        { "year": "2014", "desc": "Moth captures begin to climb in Maine; Task Force forms" },
+        { "year": "2018", "desc": "First sustained Maine populations confirmed" },
+        { "year": "2023", "desc": "Spray trial program begins under MFS oversight" },
+        { "year": "2025", "desc": "Visible defoliation mapped in Aroostook and Somerset" },
+        { "year": "2026-2030", "desc": "Predicted outbreak peak and gradual decline phase" }
+      ],
+      "link_label": "Maine SBW Task Force",
+      "link_url": "https://sbwoutreach.org/",
+      "link_desc": "Monitoring, salvage planning, and landowner resources",
+      "photo_image": "images/photo_aerial_management.jpg",
+      "photo_caption": "Northern Maine spruce-fir forest. The species at risk: balsam fir, white spruce, red spruce, and black spruce."
+    },
+    "eab_2027_example": {
+      "_comment": "Example placeholder for future story rotation. To activate, change 'active' above to 'eab_2027_example'.",
+      "tag": "Example story · not active",
+      "headline": "Emerald ash borer reaches central Maine.",
+      "intro_paragraphs": ["Placeholder copy for the next featured story."],
+      "timeline": [
+        { "year": "2018", "desc": "First detection in Maine" },
+        { "year": "2026", "desc": "Spread documented in 8 counties" }
+      ],
+      "link_label": "MFS EAB Program",
+      "link_url": "https://www.maine.gov/dacf/php/pesticides/eab/",
+      "link_desc": "Detection map and management guidance",
+      "photo_image": "images/photo_forest_interior.jpg",
+      "photo_caption": "Mature ash stand at risk."
+    }
+  }
+}

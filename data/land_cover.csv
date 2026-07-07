@@ -1,0 +1,15 @@
+parent,subclass,parent_pct,sub_pct
+Forest,Mixed Forest,73.82,46.75
+Forest,Evergreen Forest,73.82,30.96
+Forest,Deciduous Forest,73.82,22.29
+Wetlands,Woody Wetlands,12.89,86.0
+Wetlands,Herbaceous Wetlands,12.89,14.0
+Developed,Open Space,5.01,49.86
+Developed,Low Intensity,5.01,30.39
+Developed,Medium Intensity,5.01,4.37
+Developed,High Intensity,5.01,15.38
+Agriculture,Pasture/Hay,3.80,68.91
+Agriculture,Cultivated Crops,3.80,31.09
+Shrubland,Shrub/Scrub,1.59,100.0
+Herbaceous,Grassland/Herbaceous,2.38,100.0
+Barren,Barren,0.51,100.0

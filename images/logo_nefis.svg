@@ -1,0 +1,7 @@
+<svg viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rounded rectangle -->
+  <rect x="2" y="2" width="116" height="46" rx="8" ry="8" fill="#2B8A3E"/>
+
+  <!-- Text -->
+  <text x="60" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">NEFIS</text>
+</svg>

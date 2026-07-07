@@ -1,0 +1,5 @@
+metric,value,unit,year,note
+Mean stand age,66,years,2024,Area-weighted average across Maine forest conditions
+Mature forest (80+ yr),32.4,%,2024,Share of forest at least 80 years old
+Old forest (120+ yr),4.1,%,2024,Share of forest at least 120 years old
+Standing snags,22,per acre,2024,Standing dead trees; key wildlife habitat
