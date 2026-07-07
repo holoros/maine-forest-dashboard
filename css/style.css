@@ -170,8 +170,8 @@ a:hover { text-decoration: underline; }
 .offset-bar { display: flex; flex-direction: column; gap: 12px; margin: 4px 0 16px; }
 .offset-row { display: flex; align-items: center; gap: 12px; }
 .offset-tag { font-family: var(--mono); font-size: .74rem; color: var(--ink-soft); width: 80px; }
-.offset-track { flex: 1; height: 12px; background: var(--cream-2); border-radius: 20px; overflow: hidden; }
-.offset-fill { width: 0; height: 100%; background: var(--sage); border-radius: 20px; transition: width 1s ease; }
+.offset-track { position: relative; flex: 1; height: 12px; background: var(--cream-2); border-radius: 20px; overflow: hidden; }
+.offset-fill { position: absolute; left: 0; top: 0; width: 0; height: 100%; background: var(--sage); border-radius: 20px; transition: width 1s ease; }
 .offset-fill.hi { background: var(--moss); }
 .offset-val { font-family: var(--mono); font-weight: 600; font-size: .82rem; color: var(--spruce); width: 40px; text-align: right; }
 .stat-foot { font-size: .86rem; color: var(--ink-soft); margin: auto 0 0; padding-top: 8px; }
