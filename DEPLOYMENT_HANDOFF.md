@@ -1,14 +1,43 @@
 # Maine Forest Dashboard V6 — Deployment Handoff
 
-**Build:** V6.3
+**Build:** V6.10
 **Date:** July 3, 2026
 **Owner:** Aaron Weiskittel, CRSF Director (aaron.weiskittel@maine.edu)
 **Deploy lead:** Leo Edmiston-Cyr (WordPress)
 **Live target:** maineforestdashboard.com
-**Live preview (staging):** https://holoros.github.io/maine-forest-dashboard/ (GitHub Pages, holoros account)
+**Live preview (staging):** https://holoros.github.io/maine-forest-dashboard/ (GitHub Pages, holoros account — current, verified)
+**Repo:** github.com/holoros/maine-forest-dashboard (source of truth; clone or download here)
 **Folder:** `outputs/maine-forest-dashboard/V6/`
 
 This is the single document to take V6 live. V5 remains untouched in the sibling `V5/` folder as a rollback.
+
+## Current state (V6.10) — what's in the build
+
+The dashboard is feature-complete and verified live in a real browser. It includes: eight sections
+(Overview, Climate & Carbon, Forest Carbon & Productivity, Forest Health & Diversity, Economy &
+Products, Land & Conservation, Maine by County, How We Know This) plus Related CRSF Resources; a
+cinematic forest hero with the KPI cards overlapping it, and two full-width photo bands; 12
+interactive charts; an interactive county choropleth with layer switching, a Hansen forest-loss
+satellite overlay, county click-to-inspect, and "Find my area" geolocation; headline KPIs whose
+source lines are now clickable gateways to the underlying source (FIA, Maine Climate Council STS,
+CRSF, DACF — all URLs verified); a PERSEUS projections handoff; observed-FIA forest-health cards;
+featured CRSF / Munsungan / UMaine branding and eight logo-bearing resource cards; works both on a
+web server and by double-click (embedded-data fallback); PWA/offline; passes a 29-check static
+stress test with zero broken links or images.
+
+## Next steps and owners
+
+1. **Production deploy (Leo).** Take the build to maineforestdashboard.com (static drop-in, below).
+   The staging URL and this folder / the repo are the source.
+2. **Photo licensing (Aaron / Meg).** The hero and photo-band images come from the V4/V5 library;
+   confirm they are CRSF/UMaine-cleared for public web use before the production launch. They are
+   already public on the staging URL.
+3. **County ecosystem-services layers (Aaron, then Claude).** To grow the county map from 3 layers
+   to the full measured ecosystem-services bundle (carbon, old-forest/LSOG, biodiversity, ownership,
+   growth-to-removal, forest acres, conserved acres), run `_county_expansion/pull_county_ecosystem_services.R`
+   on a networked machine with R; drop the resulting CSV into `data/`. Claude then wires the layers
+   and redeploys. See `_county_expansion/COUNTY_EXPANSION_PLAN.md`.
+4. **Annual data refresh (Aaron / Claude).** Per the update workflow below.
 
 ## What V6 is
 
