@@ -1,9 +1,9 @@
 kpi_id,value,unit,label,sublabel,asof,source,source_url
 forest_acres,17.4,M acres,17.4 Million Acres,Forestland statewide,2026,FIA / MFS,https://research.fs.usda.gov/programs/fia
 pct_forested,87.8,%,87.8% Forested,Highest forest cover of any U.S. state,2026,FIA,https://research.fs.usda.gov/programs/fia
-carbon_stored,1592,MMTC,1.59 Billion Metric Tons,Carbon stored in Maine forests,2023,FIA,https://research.fs.usda.gov/programs/fia
+carbon_stored,1592,MMTC,1.59 Billion Metric Tons,Carbon stored in Maine forests,2023,MCC STS / FIA,https://www.maine.gov/future/climate/council/sts
 emissions_offset,91,%,91% of Emissions Offset,"Natural & working lands, 2017-2021",2024,Hayes et al.,https://www.maine.gov/future/climate/council/sts
 growth_to_harvest,1.72,ratio,1.72x Growth-to-Harvest,Forests grow 72% more wood than is harvested,2024,FIA,https://research.fs.usda.gov/programs/fia
-economic_output,8.3,B,$8.3 Billion,Annual forest products economy,2023,UMaine FIDACS,https://crsf.umaine.edu/
-jobs_supported,29637,jobs,"29,637 Jobs","Direct, indirect & induced employment",2023,UMaine FIDACS,https://crsf.umaine.edu/
+economic_output,8.3,B,$8.3 Billion,Annual forest products economy,2023,UMaine Forest Economy,https://umaine.edu/foresteconomy/
+jobs_supported,29637,jobs,"29,637 Jobs","Direct, indirect & induced employment",2023,UMaine Forest Economy,https://umaine.edu/foresteconomy/
 conserved_acres,4.1,M acres,4.1 Million Acres Conserved,About 22% of forests under protection,2024,DACF,https://www.maine.gov/dacf/

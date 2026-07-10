@@ -578,65 +578,23 @@ document.getElementById('locateBtn').addEventListener('click', () => {
 });
 
 /* ============================================================
-   FOREST-LOSS OVERLAY (Hansen Global Forest Change COG)
-   Lazy-loads georaster libs; renders loss-year raster on the map.
+   FOREST-LOSS OVERLAY (Hansen Global Forest Change, 2001-2023)
+   The loss-year GeoTIFF is pre-rendered to a colored PNG (images/forestloss.png)
+   and shown as a simple Leaflet image overlay — no client-side raster library,
+   so it is robust and works offline / from file:// as well.
+   Bounds match the source raster (gdalwarp -te -71.2 42.9 -66.8 47.6).
    ============================================================ */
-const LOSS_STOPS = [[2001,'#F6E27A'],[2008,'#E8A23D'],[2015,'#B4552F'],[2023,'#7A1E12']];
-function lossColor(year) {
-  if (!year || year < 1) return null;
-  let lo = LOSS_STOPS[0], hi = LOSS_STOPS[LOSS_STOPS.length - 1];
-  for (let i = 0; i < LOSS_STOPS.length - 1; i++) {
-    if (year >= LOSS_STOPS[i][0] && year <= LOSS_STOPS[i+1][0]) { lo = LOSS_STOPS[i]; hi = LOSS_STOPS[i+1]; break; }
-  }
-  const t = (year - lo[0]) / Math.max(1, hi[0] - lo[0]);
-  const c1 = lo[1].match(/\w\w/g).map(h => parseInt(h, 16));
-  const c2 = hi[1].match(/\w\w/g).map(h => parseInt(h, 16));
-  const m = c1.map((v, i) => Math.round(v + (c2[i] - v) * t));
-  return `rgb(${m[0]},${m[1]},${m[2]})`;
-}
-/* Forest-loss GeoTIFF as an ArrayBuffer: fetch on a server, or decode the
-   lazily-loaded base64 embed when running from file://. */
-function loadScript(src) {
-  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-}
-async function loadLossBuffer() {
-  if (FILE_MODE) {
-    if (!window.MFD_TIF_B64) await loadScript('js/data-embed-tif.js');
-    const bin = atob(window.MFD_TIF_B64); const len = bin.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes.buffer;
-  }
-  return fetch('data/maine_forestloss.tif').then(r => r.arrayBuffer());
-}
-let _grLoading = null;
-function loadGeoRaster() {
-  if (window.GeoRasterLayer && window.parseGeoraster) return Promise.resolve();
-  if (_grLoading) return _grLoading;
-  const add = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-  _grLoading = add('https://unpkg.com/georaster/dist/georaster.browser.bundle.min.js')
-    .then(() => add('https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js'));
-  return _grLoading;
-}
 (function initLossOverlay() {
   const btn = document.getElementById('lossBtn');
   const legend = document.getElementById('lossLegend');
   if (!btn) return;
+  const BOUNDS = [[42.9, -71.2], [47.6, -66.8]];
   let lossLayer = null;
-  btn.addEventListener('click', async () => {
+  btn.addEventListener('click', () => {
     if (typeof map === 'undefined' || !map) return;
     const turnOn = !btn.classList.contains('on');
     if (turnOn) {
-      if (!lossLayer) {
-        const prev = btn.textContent; btn.textContent = 'Loading loss layer…'; btn.disabled = true;
-        try {
-          await loadGeoRaster();
-          const buf = await loadLossBuffer();
-          const gr = await parseGeoraster(buf);
-          lossLayer = new GeoRasterLayer({ georaster: gr, opacity: 0.85, resolution: 256, pixelValuesToColorFn: v => lossColor(v[0]) });
-        } catch (e) { console.warn('forest-loss overlay failed', e); btn.textContent = prev; btn.disabled = false; return; }
-        btn.textContent = prev; btn.disabled = false;
-      }
+      if (!lossLayer) lossLayer = L.imageOverlay('images/forestloss.png', BOUNDS, { opacity: 0.85, interactive: false, className: 'forestloss-overlay' });
       lossLayer.addTo(map);
       btn.classList.add('on'); btn.setAttribute('aria-pressed', 'true');
       if (legend) legend.hidden = false;

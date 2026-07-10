@@ -1,9 +1,9 @@
 /* Maine Forest Dashboard service worker.
    Caches the app shell + datasets for offline load. Bump CACHE_VERSION on each build. */
-const CACHE_VERSION = 'mfd-v6.16';
+const CACHE_VERSION = 'mfd-v6.17';
 const SHELL = [
   './', 'index.html', 'css/style.css', 'js/app.js', 'js/data-embed.js', 'manifest.json',
-  'images/logo_mfd_icon.png', 'images/logo_mfd_mark.png', 'images/logo_crsf.png', 'images/logo_munsungan.png',
+  'images/logo_mfd_icon.png', 'images/logo_mfd_mark.png', 'images/logo_crsf.png', 'images/logo_munsungan.png', 'images/forestloss.png',
   'data/headline_kpis.csv', 'data/carbon_balance.csv', 'data/emissions_offset.csv',
   'data/pest_counties.csv', 'data/disturbance_agents_fia.csv', 'data/forest_structure_fia.csv', 'data/carbon_storage_2003_2023.csv', 'data/health_diversity.csv',
   'data/fire_spei_1903_2024.csv', 'data/contribution_breakdown.csv', 'data/sector_output.csv',
