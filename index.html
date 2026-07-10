@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="css/style.css?v=6.10">
+<link rel="stylesheet" href="css/style.css?v=6.11">
 </head>
 <body>
 <a class="skip-link" href="#overview">Skip to content</a>
@@ -363,8 +363,10 @@
       <span class="section-kicker">06 — Explore</span>
       <h2>Maine by County</h2>
       <p class="section-sub">
-        Choose an indicator, then click a county to see its profile. Or use "Find my area" to jump to
-        where you are.
+        Nine measured layers — the forest's ecosystem-services bundle. Color the map by any one, then
+        click a county for its full snapshot: forest area, carbon, age, old forest, tree diversity,
+        ownership, jobs, and harvest. Forest structure and carbon are design-based estimates from USDA
+        FIA field plots; jobs and harvest from MFPC and MFS. Or use "Find my area" to jump to where you are.
       </p>
     </div>
 
@@ -372,8 +374,14 @@
       <div class="map-layer-group" role="group" aria-label="Color counties by">
         <span class="ctrl-label">Color by</span>
         <button class="layer-btn active" data-layer="forest_jobs">Forest jobs</button>
+        <button class="layer-btn" data-layer="forest_acres">Forest area</button>
         <button class="layer-btn" data-layer="pct_forested">% forested</button>
-        <button class="layer-btn" data-layer="harvest_2013_units">Harvest volume</button>
+        <button class="layer-btn" data-layer="carbon_per_acre_mt">Carbon density</button>
+        <button class="layer-btn" data-layer="mean_stand_age">Forest age</button>
+        <button class="layer-btn" data-layer="old_forest_pct">Old forest</button>
+        <button class="layer-btn" data-layer="species_richness">Tree species</button>
+        <button class="layer-btn" data-layer="public_forest_pct">Public land</button>
+        <button class="layer-btn" data-layer="harvest_2013_units">Harvest</button>
       </div>
       <div class="map-overlay-group">
         <button class="overlay-btn" id="lossBtn" aria-pressed="false">🛰 Forest loss 2001–2023</button>
@@ -390,13 +398,8 @@
       <div id="countyMap" class="county-map"></div>
       <aside class="county-panel card" id="countyPanel">
         <h3 id="cpName">Click a county</h3>
-        <p class="cp-hint" id="cpHint">Select any county on the map to see forest jobs, forest cover, and harvest levels.</p>
-        <dl class="cp-stats" id="cpStats" hidden>
-          <div><dt>Forest sector jobs</dt><dd id="cpJobs">—</dd></div>
-          <div><dt>Share of county jobs</dt><dd id="cpJobsPct">—</dd></div>
-          <div><dt>Percent forested</dt><dd id="cpForested">—</dd></div>
-          <div><dt>2013 harvest volume</dt><dd id="cpHarvest">—</dd></div>
-        </dl>
+        <p class="cp-hint" id="cpHint">Select any county to see its full ecosystem-services snapshot: forest area, carbon, age, old forest, diversity, ownership, jobs, and harvest.</p>
+        <dl class="cp-stats" id="cpStats" hidden></dl>
       </aside>
     </div>
     <p class="map-legend-note" id="mapLegendNote"></p>
@@ -512,8 +515,8 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="js/data-embed.js?v=6.10"></script>
-<script src="js/app.js?v=6.10"></script>
+<script src="js/data-embed.js?v=6.11"></script>
+<script src="js/app.js?v=6.11"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

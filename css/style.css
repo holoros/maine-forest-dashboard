@@ -232,8 +232,8 @@ a:hover { text-decoration: underline; }
 .county-panel { display: flex; flex-direction: column; }
 .county-panel h3 { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; color: var(--spruce-dk); margin: 0 0 8px; }
 .cp-hint { font-size: .92rem; color: var(--ink-soft); }
-.cp-stats { margin: 8px 0 0; display: flex; flex-direction: column; gap: 0; }
-.cp-stats > div { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+.cp-stats { margin: 8px 0 0; display: flex; flex-direction: column; gap: 0; overflow-y: auto; }
+.cp-stats > div { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line); gap: 12px; }
 .cp-stats dt { font-size: .9rem; color: var(--ink-soft); margin: 0; }
 .cp-stats dd { margin: 0; font-family: var(--mono); font-weight: 600; font-size: 1.05rem; color: var(--spruce-dk); text-align: right; }
 .map-legend-note { font-family: var(--mono); font-size: .78rem; color: var(--ink-soft); margin-top: 14px; }

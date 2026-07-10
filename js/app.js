@@ -419,7 +419,13 @@ getCSV('maine_conserved_lands_by_year.csv').then(rows => {
    ============================================================ */
 const LAYERS = {
   forest_jobs:        { label: 'Forest sector jobs',   fmt: v => Number(v).toLocaleString() + ' jobs' },
-  pct_forested:       { label: 'Percent forested',     fmt: v => v.toFixed(1) + '% forested' },
+  forest_acres:       { label: 'Forest area',          fmt: v => (v/1e6).toFixed(2) + 'M acres' },
+  pct_forested:       { label: 'Percent forested',     fmt: v => v.toFixed(1) + '%' },
+  carbon_per_acre_mt: { label: 'Carbon density',       fmt: v => v.toFixed(1) + ' t C/acre' },
+  mean_stand_age:     { label: 'Average forest age',   fmt: v => v.toFixed(0) + ' yr' },
+  old_forest_pct:     { label: 'Old forest (100+ yr)', fmt: v => v.toFixed(1) + '%' },
+  species_richness:   { label: 'Tree species',         fmt: v => v.toFixed(0) + ' species' },
+  public_forest_pct:  { label: 'Public forest',        fmt: v => v.toFixed(1) + '%' },
   harvest_2013_units: { label: '2013 harvest volume',  fmt: v => Number(v).toLocaleString() + ' units' }
 };
 let map, geoLayer, countyData = {}, activeLayer = 'forest_jobs', geojson;
@@ -454,19 +460,43 @@ function fillPanel(name) {
   const d = countyData[name]; if (!d) return;
   document.getElementById('cpName').textContent = name + ' County';
   document.getElementById('cpHint').hidden = true;
-  document.getElementById('cpStats').hidden = false;
-  document.getElementById('cpJobs').textContent = Number(d.forest_jobs).toLocaleString();
-  document.getElementById('cpJobsPct').textContent = d.forest_jobs_pct + '%';
-  document.getElementById('cpForested').textContent = d.pct_forested.toFixed(1) + '%';
-  document.getElementById('cpHarvest').textContent = Number(d.harvest_2013_units).toLocaleString();
+  const stats = document.getElementById('cpStats');
+  stats.hidden = false;
+  const n = (v, dp = 0, suf = '') => v == null ? '—' : Number(v).toLocaleString(undefined, { maximumFractionDigits: dp, minimumFractionDigits: dp }) + suf;
+  const carbon = d.carbon_ag_mmt == null ? '—'
+    : d.carbon_ag_mmt.toFixed(1) + ' MMT · ' + Math.round(d.carbon_per_acre_mt) + ' t/ac';
+  const rows = [
+    ['Forest area', d.forest_acres == null ? '—' : (d.forest_acres / 1e6).toFixed(2) + 'M acres'],
+    ['Percent forested', n(d.pct_forested, 1, '%')],
+    ['Aboveground carbon', carbon],
+    ['Average forest age', n(d.mean_stand_age, 0, ' yr')],
+    ['Old forest (100+ yr)', n(d.old_forest_pct, 1, '%')],
+    ['Tree species richness', n(d.species_richness, 0, ' species')],
+    ['Public forest', n(d.public_forest_pct, 1, '%')],
+    ['Forest sector jobs', n(d.forest_jobs, 0)],
+    ['2013 harvest volume', n(d.harvest_2013_units, 0, ' units')]
+  ];
+  stats.innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
 }
 
-Promise.all([getCSV('county_indicators.csv'), getJSON('maine_counties.geojson')]).then(([rows, gj]) => {
+Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.csv'), getJSON('maine_counties.geojson')])
+  .then(([rows, esRows, gj]) => {
   geojson = gj;
   rows.forEach(r => countyData[r.county] = {
     forest_jobs: num(r.forest_jobs), forest_jobs_pct: r.forest_jobs_pct,
     pct_forested: num(r.pct_forested), harvest_2013_units: num(r.harvest_2013_units),
     harvest_intensity: r.harvest_intensity
+  });
+  // merge in FIA design-based ecosystem-services metrics (by county name)
+  esRows.forEach(r => {
+    const c = countyData[r.county]; if (!c) return;
+    c.forest_acres = num(r.forest_acres);
+    c.carbon_ag_mmt = num(r.carbon_ag_mmt);
+    c.carbon_per_acre_mt = num(r.carbon_per_acre_mt);
+    c.mean_stand_age = num(r.mean_stand_age);
+    c.old_forest_pct = num(r.old_forest_pct);
+    c.species_richness = num(r.species_richness);
+    c.public_forest_pct = num(r.public_forest_pct);
   });
 
   map = L.map('countyMap', { scrollWheelZoom: false, zoomControl: true, attributionControl: true })
