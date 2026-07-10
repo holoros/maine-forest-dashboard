@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="css/style.css?v=6.14">
+<link rel="stylesheet" href="css/style.css?v=6.15">
 </head>
 <body>
 <a class="skip-link" href="#overview">Skip to content</a>
@@ -365,8 +365,9 @@
       <p class="section-sub">
         Ten measured layers — the forest's ecosystem-services bundle. Color the map by any one, then
         click a county for its full snapshot: forest area, carbon, age, old forest, tree diversity,
-        ownership, reserved forest, jobs, and current harvest. Forest structure, carbon, and harvest are
-        design-based estimates from USDA FIA field plots; jobs from MFPC. Or use "Find my area" to jump to where you are.
+        ownership, conserved land, jobs, and current harvest. Forest structure, carbon, and harvest are
+        design-based estimates from USDA FIA field plots; conserved land from the Maine DACF state GIS;
+        jobs from MFPC. Or use "Find my area" to jump to where you are.
       </p>
     </div>
 
@@ -381,7 +382,7 @@
         <button class="layer-btn" data-layer="old_forest_pct">Old forest</button>
         <button class="layer-btn" data-layer="species_richness">Tree species</button>
         <button class="layer-btn" data-layer="public_forest_pct">Public land</button>
-        <button class="layer-btn" data-layer="reserved_forest_pct">Reserved forest</button>
+        <button class="layer-btn" data-layer="conserved_pct">Conserved land</button>
         <button class="layer-btn" data-layer="harvest_mcf_yr">Harvest</button>
       </div>
       <div class="map-overlay-group">
@@ -516,8 +517,8 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="js/data-embed.js?v=6.14"></script>
-<script src="js/app.js?v=6.14"></script>
+<script src="js/data-embed.js?v=6.15"></script>
+<script src="js/app.js?v=6.15"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

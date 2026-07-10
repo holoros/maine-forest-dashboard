@@ -426,7 +426,7 @@ const LAYERS = {
   old_forest_pct:     { label: 'Old forest (100+ yr)', fmt: v => v.toFixed(1) + '%' },
   species_richness:   { label: 'Tree species',         fmt: v => v.toFixed(0) + ' species' },
   public_forest_pct:  { label: 'Public forest',        fmt: v => v.toFixed(1) + '%' },
-  reserved_forest_pct:{ label: 'Reserved forest',      fmt: v => v.toFixed(1) + '%' },
+  conserved_pct:      { label: 'Conserved land',       fmt: v => v.toFixed(1) + '%' },
   harvest_mcf_yr:     { label: 'Annual harvest',       fmt: v => v.toFixed(2) + ' MMCF/yr' }
 };
 let map, geoLayer, countyData = {}, activeLayer = 'forest_jobs', geojson;
@@ -476,15 +476,16 @@ function fillPanel(name) {
     ['Old forest (100+ yr)', n(d.old_forest_pct, 1, '%')],
     ['Tree species richness', n(d.species_richness, 0, ' species')],
     ['Public forest', n(d.public_forest_pct, 1, '%')],
-    ['Reserved forest', n(d.reserved_forest_pct, 1, '%')],
+    ['Conserved land', d.conserved_pct == null ? '—' : d.conserved_pct.toFixed(1) + '% · ' + Math.round(d.conserved_acres / 1000) + 'k ac'],
     ['Forest sector jobs', n(d.forest_jobs, 0)],
     ['Annual harvest (removals)', d.harvest_mcf_yr == null ? '—' : d.harvest_mcf_yr.toFixed(2) + ' MMCF/yr']
   ];
   stats.innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
 }
 
-Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.csv'), getJSON('maine_counties.geojson')])
-  .then(([rows, esRows, gj]) => {
+Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.csv'),
+             getCSV('conserved_by_county.csv'), getJSON('maine_counties.geojson')])
+  .then(([rows, esRows, consRows, gj]) => {
   geojson = gj;
   rows.forEach(r => countyData[r.county] = {
     forest_jobs: num(r.forest_jobs), forest_jobs_pct: r.forest_jobs_pct,
@@ -501,8 +502,13 @@ Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.
     c.old_forest_pct = num(r.old_forest_pct);
     c.species_richness = num(r.species_richness);
     c.public_forest_pct = num(r.public_forest_pct);
-    c.reserved_forest_pct = num(r.reserved_forest_pct);
     c.harvest_mcf_yr = num(r.harvest_mcf_yr);
+  });
+  // conserved land from the Maine DACF state GIS (spatial clip to counties)
+  consRows.forEach(r => {
+    const c = countyData[r.county]; if (!c) return;
+    c.conserved_acres = num(r.conserved_acres);
+    c.conserved_pct = num(r.conserved_pct);
   });
 
   map = L.map('countyMap', { scrollWheelZoom: false, zoomControl: true, attributionControl: true })
