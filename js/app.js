@@ -470,8 +470,10 @@ function fillPanel(name) {
   const stats = document.getElementById('cpStats');
   stats.hidden = false;
   const n = (v, dp = 0, suf = '') => v == null ? '—' : Number(v).toLocaleString(undefined, { maximumFractionDigits: dp, minimumFractionDigits: dp }) + suf;
+  const carbonAc = d.carbon_per_acre_mt == null ? ''
+    : Math.round(d.carbon_per_acre_mt) + (d.carbon_ci95 != null ? ' ± ' + d.carbon_ci95.toFixed(1) : '') + ' t/ac';
   const carbon = d.carbon_ag_mmt == null ? '—'
-    : d.carbon_ag_mmt.toFixed(1) + ' MMT · ' + Math.round(d.carbon_per_acre_mt) + ' t/ac';
+    : d.carbon_ag_mmt.toFixed(1) + ' MMT · ' + carbonAc;
   const rows = [
     ['Forest area', d.forest_acres == null ? '—' : (d.forest_acres / 1e6).toFixed(2) + 'M acres'],
     ['Percent forested', n(d.pct_forested, 1, '%')],
@@ -484,12 +486,15 @@ function fillPanel(name) {
     ['Forest sector jobs', n(d.forest_jobs, 0)],
     ['Annual harvest (removals)', d.harvest_mcf_yr == null ? '—' : d.harvest_mcf_yr.toFixed(2) + ' MMCF/yr']
   ];
-  stats.innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  const note = d.carbon_ci95 != null
+    ? `<p class="cp-note">Carbon shown as estimate ± 95% confidence interval (FIA design-based sampling error). Wider intervals reflect counties with fewer field plots.</p>`
+    : '';
+  stats.innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('') + note;
 }
 
 Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.csv'),
-             getCSV('conserved_by_county.csv'), getJSON('maine_counties.geojson')])
-  .then(([rows, esRows, consRows, gj]) => {
+             getCSV('conserved_by_county.csv'), getCSV('county_ci.csv'), getJSON('maine_counties.geojson')])
+  .then(([rows, esRows, consRows, ciRows, gj]) => {
   geojson = gj;
   rows.forEach(r => countyData[r.county] = {
     forest_jobs: num(r.forest_jobs), forest_jobs_pct: r.forest_jobs_pct,
@@ -513,6 +518,11 @@ Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.
     const c = countyData[r.county]; if (!c) return;
     c.conserved_acres = num(r.conserved_acres);
     c.conserved_pct = num(r.conserved_pct);
+  });
+  // 95% CI half-widths from rFIA design-based sampling error (Cardinal)
+  ciRows.forEach(r => {
+    const c = countyData[r.county]; if (!c) return;
+    c.carbon_ci95 = num(r.carbon_ci95_halfwidth);
   });
 
   map = L.map('countyMap', { scrollWheelZoom: false, zoomControl: true, attributionControl: true })

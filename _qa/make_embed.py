@@ -20,7 +20,7 @@ os.chdir(ROOT)
 CSVS = ['headline_kpis', 'carbon_storage_2003_2023', 'health_diversity', 'carbon_balance',
         'fire_spei_1903_2024', 'pest_counties', 'contribution_breakdown', 'sector_output',
         'export_timeseries', 'forest_ownership', 'maine_conserved_lands_by_year',
-        'county_indicators', 'county_ecosystem_services', 'conserved_by_county', 'disturbance_agents_fia', 'forest_structure_fia']
+        'county_indicators', 'county_ecosystem_services', 'conserved_by_county', 'county_ci', 'disturbance_agents_fia', 'forest_structure_fia']
 JSONS = ['featured.json', 'maine_counties.geojson']
 
 emb = {'csv': {}, 'json': {}}

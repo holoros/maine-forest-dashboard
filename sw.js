@@ -1,6 +1,6 @@
 /* Maine Forest Dashboard service worker.
    Caches the app shell + datasets for offline load. Bump CACHE_VERSION on each build. */
-const CACHE_VERSION = 'mfd-v6.18';
+const CACHE_VERSION = 'mfd-v6.19';
 const SHELL = [
   './', 'index.html', 'css/style.css', 'js/app.js', 'js/data-embed.js', 'manifest.json',
   'images/logo_mfd_icon.png', 'images/logo_mfd_mark.png', 'images/logo_crsf.png', 'images/logo_munsungan.png', 'images/forestloss.png',
@@ -8,7 +8,7 @@ const SHELL = [
   'data/pest_counties.csv', 'data/disturbance_agents_fia.csv', 'data/forest_structure_fia.csv', 'data/carbon_storage_2003_2023.csv', 'data/health_diversity.csv',
   'data/fire_spei_1903_2024.csv', 'data/contribution_breakdown.csv', 'data/sector_output.csv',
   'data/export_timeseries.csv', 'data/forest_ownership.csv',
-  'data/maine_conserved_lands_by_year.csv', 'data/county_indicators.csv', 'data/county_ecosystem_services.csv', 'data/conserved_by_county.csv',
+  'data/maine_conserved_lands_by_year.csv', 'data/county_indicators.csv', 'data/county_ecosystem_services.csv', 'data/conserved_by_county.csv', 'data/county_ci.csv',
   'data/maine_counties.geojson', 'data/featured.json'
 ];
 self.addEventListener('install', e => {
