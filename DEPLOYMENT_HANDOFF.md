@@ -42,7 +42,17 @@ stress test with zero broken links or images.
    Notes: carbon reflects the current NSVB methodology (higher than older figures); "harvest" is FIA
    net annual growing-stock removals (a current measure that supersedes the 2013 MFS snapshot);
    "reserved forest" is FIA RESERVCD (statutorily protected from harvest) and is narrower than total
-   DACF conserved lands, which include working-forest easements — adding those would need the DACF GIS.
+   DACF conserved lands, which include working-forest easements — adding those needs the DACF GIS.
+   Map shading is rank-based (quantile) so skewed layers read clearly; the legend shows true range.
+
+4. **Conserved-acres-by-county from the state GIS (Aaron, then Claude).** Per direction, true conserved
+   lands should come from the authoritative Maine DACF / Bureau of Parks & Lands "Maine Conserved Lands"
+   layer, not the FIA reserved proxy. A turnkey launcher is ready:
+   `_county_expansion/pull_conserved_by_county.py` — it pulls the state layer
+   (services1.arcgis.com/.../Maine_Conserved_Lands_All), does a true spatial clip to county boundaries
+   (so parcels spanning counties split correctly), and writes `conserved_by_county.csv` (validate: ~4.1M
+   acres statewide). Run it on a machine with internet + `pip install geopandas requests`; drop the CSV
+   in `data/` and Claude wires the "Conserved land" map layer + county-panel row and redeploys.
 4. **Annual data refresh (Aaron / Claude).** Per the update workflow below.
 
 ## What V6 is
