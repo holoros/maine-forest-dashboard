@@ -140,10 +140,13 @@ a:hover { text-decoration: underline; }
 .kpi-label { font-weight: 600; font-size: .9rem; margin-top: 6px; }
 .kpi-sub { font-size: .8rem; color: var(--ink-soft); margin-top: 3px; line-height: 1.4; }
 .kpi-src { display: block; font-family: var(--mono); font-size: .66rem; color: var(--sage-text); margin-top: 10px; letter-spacing: .02em; }
-.kpi-src-link { text-decoration: none; transition: color .15s; }
-.kpi-src-link:hover { color: var(--spruce); text-decoration: none; }
-.kpi-src-arrow { opacity: .55; }
-.kpi-src-link:hover .kpi-src-arrow { opacity: 1; color: var(--gold-text); }
+/* whole KPI card is a clickable gateway to its source */
+.kpi { transition: transform .16s, box-shadow .16s, border-color .16s; }
+.kpi-link { text-decoration: none; color: inherit; cursor: pointer; }
+.kpi-link:hover, .kpi-link:focus-visible { border-color: var(--moss); transform: translateY(-3px); box-shadow: var(--shadow-md); text-decoration: none; }
+.kpi-link:hover .kpi-src, .kpi-link:focus-visible .kpi-src { color: var(--spruce); }
+.kpi-src-arrow { opacity: .5; }
+.kpi-link:hover .kpi-src-arrow, .kpi-link:focus-visible .kpi-src-arrow { opacity: 1; color: var(--gold-text); }
 
 /* ---------------- SECTIONS ---------------- */
 .section { padding: 76px 0; border-bottom: 1px solid var(--line); }
@@ -242,6 +245,34 @@ a:hover { text-decoration: underline; }
 .leaflet-popup-content { font-family: var(--sans); }
 .leaflet-popup-content b { color: var(--spruce); }
 
+/* ---------------- CHART LIGHTBOX ---------------- */
+.chart-card { position: relative; }
+.chart-card canvas { cursor: zoom-in; }
+.chart-card::after {
+  content: "⤢ enlarge"; position: absolute; top: 22px; right: 24px; z-index: 2;
+  font-family: var(--mono); font-size: .66rem; color: var(--ink-soft);
+  background: var(--cream); border: 1px solid var(--line); border-radius: 20px;
+  padding: 3px 9px; opacity: 0; transition: opacity .15s; pointer-events: none;
+}
+.chart-card:hover::after { opacity: .8; }
+body.modal-open { overflow: hidden; }
+.chart-modal {
+  position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  background: rgba(15,30,20,.62); backdrop-filter: blur(3px); padding: 24px; animation: fadeIn .16s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.chart-modal-inner {
+  background: var(--paper); border-radius: var(--radius); box-shadow: 0 24px 70px rgba(0,0,0,.4);
+  width: min(1000px, 96vw); max-height: 92vh; display: flex; flex-direction: column; padding: 22px 26px 26px;
+}
+.chart-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 8px; }
+.chart-modal-head h3 { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; color: var(--spruce-dk); margin: 0; }
+.chart-modal-head p { margin: 6px 0 0; font-size: .92rem; color: var(--ink-soft); max-width: 70ch; }
+.chart-modal-close { flex-shrink: 0; background: var(--cream-2); border: 0; width: 38px; height: 38px; border-radius: 50%; font-size: 1.5rem; line-height: 1; color: var(--spruce-dk); cursor: pointer; transition: .15s; }
+.chart-modal-close:hover { background: var(--gold-soft); }
+.chart-modal-body { flex: 1; min-height: 0; }
+.chart-modal-body .chart-box, .chart-modal-body .chart-box.tall { height: min(72vh, 640px); margin-top: 10px; }
+
 /* ---------------- PHOTO BANDS ---------------- */
 .photo-band {
   position: relative; min-height: 300px; display: flex; align-items: center;
@@ -321,8 +352,9 @@ a:hover { text-decoration: underline; }
 }
 .stressor h3 { font-family: var(--serif); font-weight: 600; font-size: 1.34rem; color: var(--spruce-dk); margin: 6px 0 8px; }
 .stressor p { margin: 0 0 12px; color: var(--ink-soft); }
-.stressor-link { font-weight: 600; font-size: .92rem; }
+.stressor-link { font-weight: 600; font-size: .92rem; display: inline-block; }
 .stressor-link::after { content: " →"; }
+.stressor-link + .stressor-link { margin-left: 20px; }
 
 /* ---------------- STRUCTURE CARDS (FIA observed) ---------------- */
 .structure-card { display: flex; flex-direction: column; }

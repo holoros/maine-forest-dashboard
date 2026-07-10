@@ -78,14 +78,12 @@ function fmt(v, unit) {
 getCSV('headline_kpis.csv').then(rows => {
   const grid = document.getElementById('kpiGrid');
   grid.innerHTML = rows.map(k => {
-    const src = k.source_url
-      ? `<a class="kpi-src kpi-src-link" href="${k.source_url}" target="_blank" rel="noopener" title="Source: ${k.source}">${k.source} · ${k.asof} <span class="kpi-src-arrow">↗</span></a>`
-      : `<div class="kpi-src">${k.source} · ${k.asof}</div>`;
-    return `<div class="kpi">
-      <div class="kpi-val">${k.label}</div>
+    const inner = `<div class="kpi-val">${k.label}</div>
       <div class="kpi-label">${k.sublabel}</div>
-      ${src}
-    </div>`;
+      <div class="kpi-src">${k.source} · ${k.asof}${k.source_url ? ' <span class="kpi-src-arrow">↗</span>' : ''}</div>`;
+    return k.source_url
+      ? `<a class="kpi kpi-link" href="${k.source_url}" target="_blank" rel="noopener" title="Source: ${k.source} — opens in a new tab">${inner}</a>`
+      : `<div class="kpi">${inner}</div>`;
   }).join('');
 });
 
@@ -232,6 +230,12 @@ getJSON('featured.json').then(f => {
   const link = document.getElementById('stressorLink');
   if (s.link_url) { link.href = s.link_url; link.textContent = s.link_label || 'Learn more'; }
   else link.remove();
+  if (s.link2_url) {
+    const l2 = document.createElement('a');
+    l2.className = 'stressor-link'; l2.href = s.link2_url; l2.target = '_blank'; l2.rel = 'noopener';
+    l2.textContent = s.link2_label || 'More';
+    (link.parentNode || document.getElementById('stressorCard')).appendChild(l2);
+  }
 }).catch(() => { const c = document.getElementById('stressorCard'); if (c) c.remove(); });
 
 /* ============================================================
@@ -640,6 +644,45 @@ function loadGeoRaster() {
       if (lossLayer) lossLayer.remove();
       btn.classList.remove('on'); btn.setAttribute('aria-pressed', 'false');
       if (legend) legend.hidden = true;
+    }
+  });
+})();
+
+/* ============================================================
+   CHART LIGHTBOX — click any chart to enlarge (moves the live
+   canvas into a modal so Chart.js re-renders crisply at size).
+   ============================================================ */
+(function initChartLightbox() {
+  function openModal(card) {
+    const box = card.querySelector('.chart-box'); if (!box) return;
+    const title = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Chart';
+    const desc = card.querySelector('figcaption p') ? card.querySelector('figcaption p').innerHTML : '';
+    const ph = document.createElement('div'); ph.className = 'chart-box-ph';
+    box.parentNode.insertBefore(ph, box);
+    const modal = document.createElement('div');
+    modal.className = 'chart-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-label', title);
+    modal.innerHTML = '<div class="chart-modal-inner"><div class="chart-modal-head"><div><h3>' + title + '</h3>' +
+      (desc ? '<p>' + desc + '</p>' : '') + '</div><button class="chart-modal-close" aria-label="Close">×</button></div>' +
+      '<div class="chart-modal-body"></div></div>';
+    modal.querySelector('.chart-modal-body').appendChild(box);
+    document.body.appendChild(modal); document.body.classList.add('modal-open');
+    const inst = Chart.getChart(box.querySelector('canvas'));
+    if (inst) requestAnimationFrame(() => inst.resize());
+    function close() {
+      ph.parentNode.insertBefore(box, ph); ph.remove(); modal.remove();
+      document.body.classList.remove('modal-open');
+      if (inst) requestAnimationFrame(() => inst.resize());
+      document.removeEventListener('keydown', onKey);
+    }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    modal.querySelector('.chart-modal-close').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', onKey);
+  }
+  document.addEventListener('click', e => {
+    if (e.target && e.target.tagName === 'CANVAS' && !e.target.closest('.county-map')) {
+      const card = e.target.closest('.chart-card');
+      if (card) openModal(card);
     }
   });
 })();

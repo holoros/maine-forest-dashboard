@@ -17,8 +17,10 @@
         { "year": "2026-2030", "desc": "Predicted outbreak peak and gradual decline phase" }
       ],
       "link_label": "Maine SBW Task Force",
-      "link_url": "https://sbwoutreach.org/",
+      "link_url": "https://www.sprucebudwormmaine.org/",
       "link_desc": "Monitoring, salvage planning, and landowner resources",
+      "link2_label": "Live L2 moth-count map (CFRU)",
+      "link2_url": "https://umaine.edu/cfru/l2-counts/",
       "photo_image": "images/photo_aerial_management.jpg",
       "photo_caption": "Northern Maine spruce-fir forest. The species at risk: balsam fir, white spruce, red spruce, and black spruce."
     },
