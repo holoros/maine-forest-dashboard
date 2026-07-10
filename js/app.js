@@ -426,7 +426,8 @@ const LAYERS = {
   old_forest_pct:     { label: 'Old forest (100+ yr)', fmt: v => v.toFixed(1) + '%' },
   species_richness:   { label: 'Tree species',         fmt: v => v.toFixed(0) + ' species' },
   public_forest_pct:  { label: 'Public forest',        fmt: v => v.toFixed(1) + '%' },
-  harvest_2013_units: { label: '2013 harvest volume',  fmt: v => Number(v).toLocaleString() + ' units' }
+  reserved_forest_pct:{ label: 'Reserved forest',      fmt: v => v.toFixed(1) + '%' },
+  harvest_mcf_yr:     { label: 'Annual harvest',       fmt: v => v.toFixed(2) + ' MMCF/yr' }
 };
 let map, geoLayer, countyData = {}, activeLayer = 'forest_jobs', geojson;
 
@@ -473,8 +474,9 @@ function fillPanel(name) {
     ['Old forest (100+ yr)', n(d.old_forest_pct, 1, '%')],
     ['Tree species richness', n(d.species_richness, 0, ' species')],
     ['Public forest', n(d.public_forest_pct, 1, '%')],
+    ['Reserved forest', n(d.reserved_forest_pct, 1, '%')],
     ['Forest sector jobs', n(d.forest_jobs, 0)],
-    ['2013 harvest volume', n(d.harvest_2013_units, 0, ' units')]
+    ['Annual harvest (removals)', d.harvest_mcf_yr == null ? '—' : d.harvest_mcf_yr.toFixed(2) + ' MMCF/yr']
   ];
   stats.innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
 }
@@ -497,6 +499,8 @@ Promise.all([getCSV('county_indicators.csv'), getCSV('county_ecosystem_services.
     c.old_forest_pct = num(r.old_forest_pct);
     c.species_richness = num(r.species_richness);
     c.public_forest_pct = num(r.public_forest_pct);
+    c.reserved_forest_pct = num(r.reserved_forest_pct);
+    c.harvest_mcf_yr = num(r.harvest_mcf_yr);
   });
 
   map = L.map('countyMap', { scrollWheelZoom: false, zoomControl: true, attributionControl: true })
