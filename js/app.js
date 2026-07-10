@@ -440,11 +440,13 @@ function ramp(t) { // cream -> moss -> spruce
 }
 function colorFor(name) {
   const d = countyData[name]; if (!d) return '#e6e2d6';
-  const vals = Object.values(countyData).map(x => x[activeLayer]).filter(v => v != null);
-  const min = Math.min(...vals), max = Math.max(...vals);
   const v = d[activeLayer]; if (v == null) return '#e6e2d6';
-  const t = max === min ? .5 : (v - min) / (max - min);
-  return ramp(t);
+  // Rank-based (quantile) shading so skewed layers (e.g. one dominant county)
+  // still read clearly across all counties. The legend shows the true range.
+  const vals = Object.values(countyData).map(x => x[activeLayer]).filter(x => x != null).sort((a, b) => a - b);
+  const n = vals.length; if (n < 2) return ramp(.5);
+  const below = vals.filter(x => x < v).length;
+  return ramp(below / (n - 1));
 }
 function styleFn(f) {
   return { fillColor: colorFor(f.properties.name), weight: 1, color: '#fff', fillOpacity: .85 };
