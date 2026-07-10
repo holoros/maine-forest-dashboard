@@ -32,11 +32,13 @@ stress test with zero broken links or images.
 2. **Photo licensing (Aaron / Meg).** The hero and photo-band images come from the V4/V5 library;
    confirm they are CRSF/UMaine-cleared for public web use before the production launch. They are
    already public on the staging URL.
-3. **County ecosystem-services layers (Aaron, then Claude).** To grow the county map from 3 layers
-   to the full measured ecosystem-services bundle (carbon, old-forest/LSOG, biodiversity, ownership,
-   growth-to-removal, forest acres, conserved acres), run `_county_expansion/pull_county_ecosystem_services.R`
-   on a networked machine with R; drop the resulting CSV into `data/`. Claude then wires the layers
-   and redeploys. See `_county_expansion/COUNTY_EXPANSION_PLAN.md`.
+3. **County ecosystem-services layers — DONE (v6.11).** The county map now carries nine measured
+   layers (forest jobs, forest area, percent forested, carbon density, forest age, old forest,
+   tree species richness, public forest, harvest), and clicking a county shows the full
+   ecosystem-services snapshot. Forest structure and carbon are design-based FIA estimates computed
+   on OSC Cardinal from the Maine FIADB (`_county_expansion/estimate_county_es.R`), validated against
+   the statewide anchor (17.42M forest acres vs 17.4M). Data in `data/county_ecosystem_services.csv`.
+   Optional future adds: conserved acres by county (DACF GIS) and an updated harvest year (MFS).
 4. **Annual data refresh (Aaron / Claude).** Per the update workflow below.
 
 ## What V6 is
